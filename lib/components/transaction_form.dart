@@ -1,6 +1,6 @@
 import 'package:expenses/components/adaptative_textfield.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import './adaptative_date_picker.dart';
 
 import './adaptative_button.dart';
 
@@ -29,22 +29,6 @@ class _TransactionFormState extends State<TransactionForm> {
     widget.onSubmit(title, value, _selectedDate);
   }
 
-  _showDatePicker() {
-    showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2019),
-      lastDate: DateTime.now(),
-    ).then((pickedDate) {
-      if (pickedDate == null) {
-        return;
-      }
-
-      setState(() {
-        _selectedDate = pickedDate;
-      });
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -71,29 +55,13 @@ class _TransactionFormState extends State<TransactionForm> {
                 onSubmitted: (_) => _submitForm(),
                 label: 'Valor (R\$)',
               ),
-              Container(
-                height: 70,
-                child: Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: Text(
-                        _selectedDate == null
-                            ? 'Nenhuma data selecionada!'
-                            : 'Data Selecionada: ${DateFormat('dd/MM/y').format(_selectedDate)}',
-                      ),
-                    ),
-                    FlatButton(
-                      textColor: Theme.of(context).primaryColor,
-                      onPressed: _showDatePicker,
-                      child: Text(
-                        'Selecione data',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    )
-                  ],
-                ),
+              AdaptativeDatePicker(
+                selectedDate: _selectedDate,
+                onDateChanged: (newDate) {
+                  setState(() {
+                    _selectedDate = newDate;
+                  });
+                },
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
